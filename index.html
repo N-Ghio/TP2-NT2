@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ejemplo 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+
+</head>
+
+
+<div class="container-fluid mt-3" id="app">
+    <input type="text" class="form-control" v-model="criterioBusqNom"
+        placeholder="Ingresar un criterio de busqueda (Nombre y Apellido)">  
+    <br>      
+    <div v-if="criterioBusqNom.length < numeroMinLength" class="alert alert-warning">
+        Debe ingresar al menos {{ numeroMinLength }} carácteres
+    </div> 
+    <input type="text" class="form-control" v-model="criterioBusqDNI"
+        placeholder="Ingresar un criterio de busqueda (DNI)">  
+    <br>      
+    <div v-if="criterioBusqDNI.length < numeroMinLength" class="alert alert-warning">
+        Debe ingresar al menos {{ numeroMinLength }} carácteres
+    </div>
+    <p>Personas filtradas por Nombre/Apellido:</p>    
+    <div class="card-deck m-0">
+        <div class="row">
+            <div class="col" v-for="persona in personasFiltradasNom">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>Personas filtradas por DNI:</p>
+    <div class="card-deck m-0">
+        <div class="row">
+            <div class="col" v-for="persona in personasFiltradasDNI">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            criterioBusqNom: '',
+            criterioBusqDNI: '',
+            numeroMinLength: 3,
+            //Aquí, en este array es donde tienen que agregar su información
+            personas: [
+                {
+                    nombre: "Daniel",
+                    apellido: "Sanchez",
+                    correo: "danielsanchez68@hotmail.com",
+                    dni: "20442873"
+                },
+                {
+                    nombre: "Nicolás",
+                    apellido: "Ghio",
+                    correo: "nico.ghio@hotmail.com",
+                    dni: "42255463"
+                },
+            ]
+
+        },
+        computed: {
+            personasFiltradasNom() {
+                return this.personas.filter((persona) => {
+                    let registroNomCompleto = `${persona.nombre} ${persona.apellido}`
+                    return registroNomCompleto.toLowerCase().includes(this.criterioBusqNom.toLowerCase())
+                });
+            },
+            personasFiltradasDNI() {
+                return this.personas.filter((persona) => {
+                    let registroDNI = `${persona.dni}`
+                    return registroDNI.includes(this.criterioBusqDNI)
+                });
+            },
+            
+        },
+        methods: {
+            getNombreCompleto(persona) {
+                return `${persona.nombre} ${persona.apellido}`
+            }
+        }
+    });
+</script>
